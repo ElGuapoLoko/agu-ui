@@ -4,10 +4,6 @@ import { Store } from '@ngrx/store';
 import { TokenStorage } from './token-storage.service';
 import { AuthActions } from './store/auth.actions';
 
-/**
- * Restores a stored, unexpired session before the first navigation, so guards
- * already see the user as logged in after a page reload.
- */
 export function provideSessionRestore(): Provider {
   return {
     provide: APP_INITIALIZER,

@@ -5,7 +5,6 @@ export interface FieldViolation {
   message: string;
 }
 
-/** Error shown to the user. Built from the API's Problem Details body or from network failures. */
 export interface ApiError {
   status: number;
   message: string;
@@ -16,7 +15,6 @@ export const CONNECTION_ERROR = 'Não foi possível conectar ao servidor. Verifi
 export const UNEXPECTED_ERROR = 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
 export const UNAVAILABLE_ERROR = 'O servidor está indisponível no momento. Tente novamente em instantes.';
 
-/** Gateway errors: the API behind the proxy is down or restarting. */
 const UNAVAILABLE_STATUSES = [502, 503, 504];
 
 interface ProblemBody {
@@ -34,7 +32,6 @@ function isViolation(value: unknown): value is FieldViolation {
   );
 }
 
-/** Converts anything thrown by HttpClient into a safe, user-facing ApiError. */
 export function toApiError(error: unknown): ApiError {
   if (!(error instanceof HttpErrorResponse)) {
     return { status: -1, message: UNEXPECTED_ERROR, violations: [] };
@@ -47,7 +44,6 @@ export function toApiError(error: unknown): ApiError {
   const body: ProblemBody = typeof error.error === 'object' && error.error !== null ? error.error : {};
   const fromApi = typeof body.status === 'number';
 
-  // A 5xx that is not our Problem Details JSON came from a proxy: the API is unreachable.
   if (UNAVAILABLE_STATUSES.includes(error.status) || (error.status >= 500 && !fromApi)) {
     return { status: error.status, message: UNAVAILABLE_ERROR, violations: [] };
   }

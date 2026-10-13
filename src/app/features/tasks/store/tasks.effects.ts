@@ -24,7 +24,6 @@ export const load$ = createEffect(
   { functional: true },
 );
 
-/** Writes run in order (concatMap) so a later edit never lands before an earlier one. */
 export const create$ = createEffect(
   (actions$ = inject(Actions), api = inject(TasksApi)) => {
     return actions$.pipe(
@@ -57,7 +56,6 @@ export const update$ = createEffect(
   { functional: true },
 );
 
-/** Toggles of different tasks may run in parallel; the reducer already applied them optimistically. */
 export const toggleDone$ = createEffect(
   (actions$ = inject(Actions), api = inject(TasksApi)) => {
     return actions$.pipe(
@@ -107,10 +105,6 @@ export const notifySuccess$ = createEffect(
   { functional: true, dispatch: false },
 );
 
-/**
- * Errors not shown inside a form. Create/update errors are shown in the dialog;
- * 401 is handled globally (session expired).
- */
 export const notifyFailure$ = createEffect(
   (actions$ = inject(Actions), notifications = inject(NotificationService)) => {
     return actions$.pipe(

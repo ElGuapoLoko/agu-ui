@@ -1,43 +1,52 @@
 DC := docker compose
-# Angular 17 needs Node 20; nvm is loaded when available so targets work from any shell.
 NODE := . "$$HOME/.nvm/nvm.sh" >/dev/null 2>&1 && nvm use >/dev/null 2>&1; true &&
 
 .DEFAULT_GOAL := help
 .PHONY: help network up down logs install dev test lint format build e2e
 
-help: ## List available targets
-	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-9s %s\n", $$1, $$2}'
+help:
+	@printf '  %-10s %s\n' 'up' 'Build and start the app in Docker on http://localhost:4200'
+	@printf '  %-10s %s\n' 'down' 'Stop the container'
+	@printf '  %-10s %s\n' 'logs' 'Follow container logs'
+	@printf '  %-10s %s\n' 'install' 'Install npm dependencies (Node 20)'
+	@printf '  %-10s %s\n' 'dev' 'Dev server with live reload on http://localhost:4200'
+	@printf '  %-10s %s\n' 'test' 'Unit tests (ChromeHeadless, with coverage)'
+	@printf '  %-10s %s\n' 'lint' 'ESLint and Prettier check'
+	@printf '  %-10s %s\n' 'format' 'Apply Prettier'
+	@printf '  %-10s %s\n' 'build' 'Production build into dist/'
+	@printf '  %-10s %s\n' 'e2e' 'Playwright tests against the running app'
+	@printf '  %-10s %s\n' 'network' 'Create the network shared with the backend'
 
-network: ## Create the Docker network shared with the backend repository (if missing)
+network:
 	@docker network inspect agu-tasks-net >/dev/null 2>&1 || docker network create agu-tasks-net >/dev/null
 
-up: network ## Build and start the app in Docker on http://localhost:4200 (waits until healthy)
+up: network
 	$(DC) up -d --build --wait
 	@echo "App ready at http://localhost:$${FRONTEND_PORT:-4200} (needs the API: 'make up' in agu-php)"
 
-down: ## Stop the container
+down:
 	$(DC) down
 
-logs: ## Follow container logs
+logs:
 	$(DC) logs -f
 
-install: ## Install npm dependencies (Node 20)
+install:
 	@$(NODE) npm ci
 
-dev: ## Dev server with live reload on http://localhost:4200 (stop 'make up' first: same port)
+dev:
 	@$(NODE) npx ng serve
 
-test: ## Unit tests (ChromeHeadless, with coverage)
+test:
 	@$(NODE) npm run test:ci
 
-lint: ## ESLint + Prettier check
+lint:
 	@$(NODE) npm run lint && npm run format:check
 
-format: ## Apply Prettier
+format:
 	@$(NODE) npm run format
 
-build: ## Production build into dist/
+build:
 	@$(NODE) npm run build
 
-e2e: ## Playwright end-to-end tests against the running app (make up here and in agu-php)
+e2e:
 	@$(NODE) PLAYWRIGHT_TEST_BASE_URL=http://localhost:$${FRONTEND_PORT:-4200} npx playwright test

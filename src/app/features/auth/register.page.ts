@@ -51,7 +51,6 @@ export class RegisterPage implements OnInit {
   readonly limits = LIMITS;
   readonly pending = this.store.selectSignal(selectAuthPending);
   readonly error = this.store.selectSignal(selectAuthError);
-  /** Error not tied to a field (e.g. rate limit, connection). */
   readonly formError = signal<string | null>(null);
   readonly showPassword = signal(false);
   readonly errorMessage = errorMessage;
@@ -63,7 +62,6 @@ export class RegisterPage implements OnInit {
   });
 
   constructor() {
-    // Map API errors (409 duplicate username, 422 violations) onto the fields.
     effect(
       () => {
         const error = this.error();
@@ -84,7 +82,6 @@ export class RegisterPage implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(AuthPageActions.opened());
 
-    // Cross-field validators must run again when the other field changes.
     const { username, password, confirmPassword } = this.form.controls;
     username.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -94,7 +91,6 @@ export class RegisterPage implements OnInit {
       .subscribe(() => confirmPassword.updateValueAndValidity({ emitEvent: false }));
   }
 
-  /** Shows the username exactly as it will be saved (trimmed, lowercase). */
   normalizeUsernameField(): void {
     const control = this.form.controls.username;
     const normalized = normalizeUsername(control.value);

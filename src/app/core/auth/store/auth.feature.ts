@@ -7,7 +7,6 @@ import { AuthActions, AuthApiActions, AuthPageActions } from './auth.actions';
 export interface AuthState {
   token: string | null;
   user: User | null;
-  /** Login or registration request in flight. */
   pending: boolean;
   error: ApiError | null;
 }

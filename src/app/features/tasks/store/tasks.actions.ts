@@ -3,14 +3,9 @@ import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { ApiError } from '../../../core/http/api-error';
 import { Task, TaskFilter, TaskInput, TaskUpdate } from '../../../shared/models/task';
 
-/**
- * Create and update carry a requestId so the dialog that started the request
- * knows when its own request finished (and can close or show errors).
- */
 export const TasksPageActions = createActionGroup({
   source: 'Tasks Page',
   events: {
-    /** Carries the filter from the URL (?filter=). */
     Opened: props<{ filter: TaskFilter }>(),
     'Retry Load': emptyProps(),
     'Filter Changed': props<{ filter: TaskFilter }>(),

@@ -18,7 +18,6 @@ function isPublicEndpoint(url: string, apiUrl: string): boolean {
   return PUBLIC_ENDPOINTS.some((path) => url === `${apiUrl}${path}`);
 }
 
-/** Adds the JWT only to requests for our own API (never to third-party URLs). */
 export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const apiUrl = inject(API_URL);
   const token = inject(Store).selectSignal(selectToken)();
@@ -30,7 +29,6 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
   return next(request.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));
 };
 
-/** A 401 on an authenticated request means the session is no longer valid. */
 export const unauthorizedInterceptor: HttpInterceptorFn = (request, next) => {
   const apiUrl = inject(API_URL);
   const store = inject(Store);
@@ -45,7 +43,6 @@ export const unauthorizedInterceptor: HttpInterceptorFn = (request, next) => {
         !isPublicEndpoint(request.url, apiUrl) &&
         store.selectSignal(selectToken)() !== null
       ) {
-        // During the first navigation router.url is still "/"; prefer the URL being navigated to.
         const returnUrl = router.getCurrentNavigation()?.extractedUrl.toString() ?? router.url;
         store.dispatch(AuthActions.sessionExpired({ returnUrl }));
       }

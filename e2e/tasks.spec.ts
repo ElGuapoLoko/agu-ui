@@ -1,6 +1,5 @@
 import { Page, expect, test } from '@playwright/test';
 
-/** A unique user per test run, so tests never depend on existing data. */
 function uniqueUsername(): string {
   return `e2e.${Date.now()}.${Math.floor(Math.random() * 1e6)}`;
 }
@@ -17,7 +16,6 @@ async function register(page: Page, username: string): Promise<void> {
 }
 
 async function openNewTaskDialog(page: Page): Promise<void> {
-  // Toolbar button on desktop, floating button on mobile.
   await page.getByRole('button', { name: 'Nova tarefa' }).locator('visible=true').first().click();
   await expect(page.getByRole('dialog')).toBeVisible();
 }
@@ -45,7 +43,6 @@ test('full task lifecycle: register, create, complete, edit, delete, logout and 
 
   await expect(page.getByText('Nenhuma tarefa ainda. Crie a primeira!')).toBeVisible();
 
-  // Create: blank title is rejected, extra spaces are cleaned up.
   await openNewTaskDialog(page);
   await page.getByLabel('Título').fill('    ');
   await page.getByRole('button', { name: 'Criar' }).click();
@@ -57,40 +54,33 @@ test('full task lifecycle: register, create, complete, edit, delete, logout and 
   await expect(page.getByRole('dialog')).toBeHidden();
   await expect(page.getByRole('heading', { name: 'Comprar café', exact: true })).toBeVisible();
 
-  // A number typed as a title is just text.
   await openNewTaskDialog(page);
   await page.getByLabel('Título').fill('2026');
   await page.getByLabel('Título').press('Enter');
   await expect(page.getByRole('heading', { name: '2026', exact: true })).toBeVisible();
   await expect(page.locator('.summary')).toHaveText('0 de 2 concluídas (2 pendentes)');
 
-  // Complete and filter.
   await page.getByRole('checkbox', { name: /Comprar café/ }).check();
   await expect(page.locator('.summary')).toHaveText('1 de 2 concluídas (1 pendente)');
-  // Done tasks get the "Concluída" stamp.
   await expect(page.locator('.stamp')).toHaveText('Concluída');
   await page.getByRole('button', { name: /^Concluídas/ }).click();
   await expect(page.getByRole('heading', { level: 3 })).toHaveText(['Comprar café']);
   await page.getByRole('button', { name: /^Todas/ }).click();
 
-  // Edit.
   await page.getByRole('button', { name: 'Ações da tarefa 2026' }).click();
   await page.getByRole('menuitem', { name: 'Editar' }).click();
   await page.getByLabel('Título').fill('Planejar 2026');
   await page.getByRole('button', { name: 'Salvar' }).click();
   await expect(page.getByRole('heading', { name: 'Planejar 2026', exact: true })).toBeVisible();
 
-  // Delete asks for confirmation.
   await page.getByRole('button', { name: 'Ações da tarefa Planejar 2026' }).click();
   await page.getByRole('menuitem', { name: 'Excluir' }).click();
   await page.getByRole('button', { name: 'Excluir' }).click();
   await expect(page.getByRole('heading', { name: 'Planejar 2026' })).toBeHidden();
 
-  // Session survives a reload.
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Comprar café', exact: true })).toBeVisible();
 
-  // Logout and log back in (username case and spaces do not matter).
   await page.getByRole('button', { name: 'Menu do usuário' }).click();
   await page.getByRole('menuitem', { name: 'Sair' }).click();
   await expect(page).toHaveURL(/\/login$/);
@@ -107,17 +97,17 @@ test('full task lifecycle: register, create, complete, edit, delete, logout and 
 });
 
 test('users never see each other’s tasks', async ({ browser }) => {
-  const ana = await browser.newPage();
-  await register(ana, uniqueUsername());
-  await openNewTaskDialog(ana);
-  await ana.getByLabel('Título').fill('Tarefa privada da Ana');
-  await ana.getByRole('button', { name: 'Criar' }).click();
-  await expect(ana.getByRole('heading', { name: 'Tarefa privada da Ana' })).toBeVisible();
+  const firstUser = await browser.newPage();
+  await register(firstUser, uniqueUsername());
+  await openNewTaskDialog(firstUser);
+  await firstUser.getByLabel('Título').fill('Tarefa privada da Ana');
+  await firstUser.getByRole('button', { name: 'Criar' }).click();
+  await expect(firstUser.getByRole('heading', { name: 'Tarefa privada da Ana' })).toBeVisible();
 
-  const bruno = await browser.newPage();
-  await register(bruno, uniqueUsername());
-  await expect(bruno.getByText('Nenhuma tarefa ainda. Crie a primeira!')).toBeVisible();
-  await expect(bruno.getByText('Tarefa privada da Ana')).toHaveCount(0);
+  const secondUser = await browser.newPage();
+  await register(secondUser, uniqueUsername());
+  await expect(secondUser.getByText('Nenhuma tarefa ainda. Crie a primeira!')).toBeVisible();
+  await expect(secondUser.getByText('Tarefa privada da Ana')).toHaveCount(0);
 });
 
 test('an invalid session sends the user back to login with an explanation', async ({ page }) => {

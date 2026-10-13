@@ -29,7 +29,6 @@ describe('RegisterPage', () => {
     fixture.detectChanges();
   });
 
-  // overrideSelector changes the shared memoized selector; undo it for the next spec files.
   afterEach(() => store.resetSelectors());
 
   function errors(): string[] {

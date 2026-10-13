@@ -36,9 +36,7 @@ export class LoginPage implements OnInit {
   private readonly store = inject(Store);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  /** Bound from the query string (?returnUrl=...) by withComponentInputBinding. */
   @Input() returnUrl?: string;
-  /** Set (?expired=1) when the user was sent here because the session expired. */
   @Input() expired?: string;
 
   readonly pending = this.store.selectSignal(selectAuthPending);

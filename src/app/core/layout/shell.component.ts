@@ -10,7 +10,6 @@ import { Store } from '@ngrx/store';
 import { AuthActions } from '../auth/store/auth.actions';
 import { selectUser } from '../auth/store/auth.feature';
 
-/** Layout for the authenticated area: toolbar with the user menu + routed content. */
 @Component({
   selector: 'app-shell',
   standalone: true,

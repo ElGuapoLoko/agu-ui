@@ -12,10 +12,6 @@ const DEFAULT_MESSAGES: Record<string, string> = {
   mismatch: 'As senhas não conferem.',
 };
 
-/**
- * First error of a control as a pt-BR message. "server" errors carry their own text;
- * `overrides` customizes messages per field (e.g. "O título é obrigatório.").
- */
 export function errorMessage(control: AbstractControl | null, overrides: Record<string, string> = {}): string | null {
   const errors = control?.errors;
   if (!errors) {
@@ -33,15 +29,10 @@ export function errorMessage(control: AbstractControl | null, overrides: Record<
   return overrides[key] ?? DEFAULT_MESSAGES[key] ?? 'Valor inválido.';
 }
 
-/** Moves keyboard focus to the first invalid field inside `root` (after a failed submit). */
 export function focusFirstInvalid(root: HTMLElement): void {
   root.querySelector<HTMLElement>('input.ng-invalid, textarea.ng-invalid')?.focus();
 }
 
-/**
- * Shows API validation errors on the matching form fields. The error disappears as soon as
- * the user edits the field (validators run again). Returns violations with no matching field.
- */
 export function applyServerErrors(form: FormGroup, violations: FieldViolation[]): FieldViolation[] {
   const unmatched: FieldViolation[] = [];
 

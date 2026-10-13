@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 
-/** Short user-facing messages (Material snackbar). */
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
   private readonly snackBar = inject(MatSnackBar);

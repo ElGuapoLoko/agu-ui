@@ -34,5 +34,3 @@ jobs:
 
       - name: Production build
         run: npm run build
-
-      # End-to-end tests (npx ng e2e) need the API running, so they run locally with `make up` in agu-php.

@@ -1,11 +1,5 @@
 /* eslint-disable no-control-regex */
 
-/**
- * Text clean-up applied before validating and sending, mirroring the backend's
- * InputNormalizer, so harmless typing mistakes never turn into errors.
- */
-
-/** Trims, removes control characters and collapses whitespace. */
 export function normalizeSingleLine(value: unknown): string {
   return String(value ?? '')
     .replace(/[\u0000-\u001F\u007F]+/g, ' ')
@@ -13,7 +7,6 @@ export function normalizeSingleLine(value: unknown): string {
     .trim();
 }
 
-/** Like normalizeSingleLine but keeps line breaks. */
 export function normalizeMultiLine(value: unknown): string {
   return String(value ?? '')
     .replace(/\r\n?/g, '\n')

@@ -6,11 +6,9 @@ export interface ConfirmDialogData {
   title: string;
   message: string;
   confirmLabel: string;
-  /** Uses the warn color for destructive actions. */
   destructive?: boolean;
 }
 
-/** Generic confirmation. Closes with `true` when confirmed. */
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,

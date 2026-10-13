@@ -7,7 +7,6 @@ import { MatMenuModule } from '@angular/material/menu';
 
 import { Task } from '../../shared/models/task';
 
-/** One entry of the docket. Presentational: emits intents, never touches the store. */
 @Component({
   selector: 'app-task-item',
   standalone: true,

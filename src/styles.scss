@@ -1,7 +1,5 @@
 @use '@angular/material' as mat;
 
-// "Pauta" theme: an institutional docket. Ink navy, cool paper, one stamp green for done work.
-
 $institutional-blue: (
   50: #e8eef8,
   100: #c6d4ee,
@@ -86,7 +84,6 @@ $dark-theme: mat.define-dark-theme(
   )
 );
 
-// Only the Material components this app uses (keeps the global CSS small).
 @mixin app-theme($theme) {
   @include mat.core-theme($theme);
   @include mat.toolbar-theme($theme);
@@ -149,7 +146,6 @@ $dark-theme: mat.define-dark-theme(
   --app-display: 'Literata', Georgia, 'Times New Roman', serif;
   --app-ui: #{$ui-font};
 
-  // Legacy names still used by a few components.
   --app-bg: var(--app-paper);
   --app-surface: var(--app-sheet);
   --app-border: var(--app-rule);
@@ -190,7 +186,6 @@ body {
 }
 
 html {
-  // Keeps focused elements visible below the sticky toolbar.
   scroll-padding-top: 80px;
 }
 
@@ -210,8 +205,6 @@ h3 {
   text-wrap: balance;
 }
 
-// Serif headings: the "document" voice of the interface.
-// (.mat-typography h1 from Material is more specific than a single class.)
 .mat-typography .display,
 .display {
   font-family: var(--app-display);
@@ -219,7 +212,6 @@ h3 {
   letter-spacing: -0.01em;
 }
 
-// Material surfaces follow the app palette (also in dark mode).
 .mat-mdc-dialog-container {
   --mdc-dialog-container-color: var(--app-sheet);
   --mdc-dialog-container-shape: 14px;
@@ -270,7 +262,6 @@ h3 {
   top: 8px;
 }
 
-// Visually hidden but available to screen readers.
 .visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -284,7 +275,6 @@ h3 {
   width: 100%;
 }
 
-// Snackbar variants used by NotificationService.
 .app-snackbar-error {
   --mdc-snackbar-container-color: #8c1d18;
   --mdc-snackbar-supporting-text-color: #fff;

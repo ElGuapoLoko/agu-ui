@@ -21,13 +21,11 @@ import { notBlank } from '../../shared/validation/validators';
 import { TasksApiActions, TasksPageActions } from './store/tasks.actions';
 
 export interface TaskFormDialogData {
-  /** Present when editing. */
   task?: Task;
 }
 
 let nextRequestId = 0;
 
-/** Create/edit dialog. Stays open until the API confirms, so validation errors can be shown in place. */
 @Component({
   selector: 'app-task-form-dialog',
   standalone: true,
@@ -67,7 +65,6 @@ export class TaskFormDialog implements OnInit {
   });
 
   ngOnInit(): void {
-    // Closing by Esc or clicking outside asks before discarding changes.
     this.dialogRef.disableClose = true;
     merge(
       this.dialogRef.backdropClick(),

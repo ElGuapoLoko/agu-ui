@@ -13,7 +13,6 @@ export const login$ = createEffect(
   (actions$ = inject(Actions), api = inject(AuthApi)) => {
     return actions$.pipe(
       ofType(AuthPageActions.login),
-      // Ignore repeated submits while a login is in flight.
       exhaustMap(({ credentials, returnUrl }) =>
         api.login(credentials).pipe(
           map((token) => AuthApiActions.loginSuccess({ token, returnUrl })),
@@ -25,7 +24,6 @@ export const login$ = createEffect(
   { functional: true },
 );
 
-/** After a successful registration the user is logged in with the same credentials. */
 export const register$ = createEffect(
   (actions$ = inject(Actions), api = inject(AuthApi)) => {
     return actions$.pipe(
@@ -62,7 +60,6 @@ export const loadUser$ = createEffect(
       switchMap(() =>
         api.me().pipe(
           map((user) => AuthApiActions.userLoaded({ user })),
-          // A 401 here is handled by the unauthorized interceptor (session expired).
           catchError(() => EMPTY),
         ),
       ),
@@ -71,7 +68,6 @@ export const loadUser$ = createEffect(
   { functional: true },
 );
 
-/** Logs the user out automatically when the token expires, even if the tab stays idle. */
 export const expiryTimer$ = createEffect(
   (actions$ = inject(Actions), router = inject(Router)) => {
     return actions$.pipe(
@@ -108,7 +104,6 @@ export const sessionExpired$ = createEffect(
       filter(() => storage.get() !== null),
       tap(({ returnUrl }) => {
         storage.clear();
-        // The login page explains that the session expired.
         void router.navigate(['/login'], { queryParams: { returnUrl: safeReturnUrl(returnUrl), expired: 1 } });
       }),
     );

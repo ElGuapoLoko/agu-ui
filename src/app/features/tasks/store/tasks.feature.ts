@@ -11,11 +11,9 @@ export interface TasksState extends EntityState<Task> {
   loadStatus: LoadStatus;
   loadError: string | null;
   filter: TaskFilter;
-  /** Tasks with a toggle or delete request in flight. */
   busyIds: number[];
 }
 
-/** Newest first; ties broken by id (same order as the API). */
 export const adapter = createEntityAdapter<Task>({
   sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt) || b.id - a.id,
 });
@@ -57,7 +55,6 @@ export const tasksFeature = createFeature({
       (state, { task }): TasksState =>
         adapter.upsertOne(task, { ...state, busyIds: withoutBusy(state.busyIds, task.id) }),
     ),
-    // Optimistic toggle: update immediately, roll back on failure.
     on(TasksPageActions.toggleDone, (state, { id, done }): TasksState =>
       adapter.updateOne({ id, changes: { done } }, { ...state, busyIds: [...state.busyIds, id] }),
     ),
@@ -75,13 +72,11 @@ export const tasksFeature = createFeature({
     on(TasksApiActions.deleteFailure, (state, { id, error }): TasksState => {
       const next = { ...state, busyIds: withoutBusy(state.busyIds, id) };
 
-      // Already gone on the server: remove it here too.
       return error.status === NOT_FOUND ? adapter.removeOne(id, next) : next;
     }),
     on(TasksApiActions.updateFailure, (state, { id, error }): TasksState =>
       error.status === NOT_FOUND ? adapter.removeOne(id, state) : state,
     ),
-    // Never keep one user's tasks in memory after logout.
     on(AuthActions.logout, AuthActions.sessionExpired, (): TasksState => initialTasksState),
   ),
   extraSelectors: ({ selectTasksState, selectFilter, selectLoadStatus }) => {

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
-/** Two-column layout shared by the login and registration pages. */
 @Component({
   selector: 'app-auth-card',
   standalone: true,

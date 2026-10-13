@@ -1,7 +1,3 @@
-/**
- * Field limits shared with the backend.
- * Keep in sync with agu-php/backend/src/Validation/Limits.php.
- */
 export const LIMITS = {
   usernameMin: 3,
   usernameMax: 50,

@@ -1,7 +1,5 @@
 name: agu-tasks-web
 
-# Production build of the Angular app, served by nginx (non-root) on http://localhost:4200.
-# /api is proxied to the backend repository (agu-php), reachable as "agu-api" on the shared network.
 services:
   frontend:
     build: .
@@ -18,7 +16,6 @@ services:
       - shared
 
 networks:
-  # Created by `make up` in either repository if it does not exist yet.
   shared:
     name: agu-tasks-net
     external: true

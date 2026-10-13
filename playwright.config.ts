@@ -1,9 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/**
- * End-to-end tests (`ng e2e`). They need the API running: `make up` in agu-php/.
- * `ng e2e` starts the Angular dev server (with the /api proxy) and runs these tests against it.
- */
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,

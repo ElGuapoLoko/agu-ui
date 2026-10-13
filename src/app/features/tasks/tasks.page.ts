@@ -46,7 +46,6 @@ export class TasksPage implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly router = inject(Router);
 
-  /** ?filter=open|done from the URL, so filtered views can be bookmarked and shared. */
   @Input() filter?: string;
 
   readonly tasks = this.store.selectSignal(selectVisibleTasks);
@@ -59,7 +58,6 @@ export class TasksPage implements OnInit {
   readonly busy = computed(() => new Set(this.busyIds()));
 
   readonly today = new Date();
-  /** Percentage of done tasks, for the progress bar. */
   readonly progress = computed(() => {
     const { total, done } = this.counts();
 

@@ -1,5 +1,3 @@
-# Production image: builds the Angular app and serves it with an unprivileged nginx
-# that also proxies /api to the backend (same origin, so no CORS in production).
 FROM node:20-alpine AS build
 
 WORKDIR /app
@@ -10,11 +8,9 @@ RUN npx ng build --configuration production
 
 FROM nginxinc/nginx-unprivileged:1.27-alpine
 
-# Rendered to /etc/nginx/conf.d/default.conf at startup, replacing ${API_UPSTREAM}.
 COPY docker/default.conf.template /etc/nginx/templates/default.conf.template
 COPY --from=build /app/dist/agu-tasks/browser /usr/share/nginx/html
 
-# The base image already runs as this user; declared explicitly for scanners and readers.
 USER nginx
 
 ENV API_UPSTREAM=http://agu-api:8080

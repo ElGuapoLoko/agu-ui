@@ -3,9 +3,7 @@ export interface Task {
   title: string;
   description: string | null;
   done: boolean;
-  /** ISO 8601 */
   createdAt: string;
-  /** ISO 8601 */
   updatedAt: string;
 }
 
