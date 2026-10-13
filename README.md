@@ -71,3 +71,73 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+---
+
+## Run with Docker
+
+Passo a passo para subir a **interface** num computador que nunca rodou o projeto. Ela roda em container: não é preciso instalar Node nem Angular.
+
+### 1. Pré-requisitos
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (ou Docker Engine + Docker Compose v2) **aberto e rodando**
+- Git
+- `make` (já vem no macOS e no Linux; no Windows use o WSL2 ou os comandos da opção B)
+- Porta livre: `4200`
+- A API rodando: repositório [agu-api](https://github.com/ElGuapoLoko/agu-api), seção "Run with Docker" do README dele. A ordem não importa: sem a API, a tela abre e avisa que o servidor está indisponível.
+
+### 2. Baixar o projeto
+
+```bash
+git clone https://github.com/ElGuapoLoko/agu-ui.git
+cd agu-ui
+```
+
+### 3. Criar o arquivo de configuração (`.env`)
+
+```bash
+cp .env.example .env
+```
+
+O frontend não tem senhas. O `.env` só define a porta (`FRONTEND_PORT=4200`) e o endereço da API dentro do Docker (`API_UPSTREAM=http://agu-api:8080`). Os valores padrão funcionam sem mudança.
+
+### 4. Subir
+
+**Opção A, com make (recomendado):**
+
+```bash
+make up
+```
+
+**Opção B, sem make:**
+
+```bash
+docker network create agu-tasks-net
+docker compose up -d --build --wait
+```
+
+> Se a rede já existir (porque a API subiu antes), o primeiro comando mostra `Error response from daemon: network with name agu-tasks-net already exists`. Pode ignorar e seguir.
+
+A primeira subida leva alguns minutos, porque compila o Angular dentro do container.
+
+### 5. Usar
+
+Abra **http://localhost:4200** e entre com **admin / admin**, ou crie uma conta em "Criar conta".
+
+O frontend e a API se comunicam pela rede Docker `agu-tasks-net`: o navegador só acessa `localhost:4200`, e as chamadas `/api` são repassadas para a API.
+
+### Comandos úteis
+
+| Comando | O que faz |
+|---|---|
+| `make down` / `docker compose down` | Para o container |
+| `make logs` | Mostra os logs |
+| `make e2e` | Roda os testes de ponta a ponta contra o app no ar (precisa de Node 20) |
+| `make help` | Lista todos os comandos |
+
+### Problemas comuns
+
+- **`Cannot connect to the Docker daemon`:** o Docker Desktop não está aberto.
+- **`network agu-tasks-net declared as external, but could not be found`:** rode `docker network create agu-tasks-net` (ou use `make up`).
+- **A tela mostra "O servidor está indisponível":** a API não está rodando. Suba o `agu-api`.
+- **Porta 4200 em uso:** troque `FRONTEND_PORT` no `.env`.
