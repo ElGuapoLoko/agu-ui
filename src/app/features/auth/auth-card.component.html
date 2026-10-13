@@ -1,0 +1,22 @@
+<div class="page">
+  <aside class="intro">
+    <p class="brand" translate="no">
+      <mat-icon aria-hidden="true">task_alt</mat-icon>
+      AGU Tarefas
+    </p>
+    <div class="statement">
+      <p class="display headline">Sua pauta do dia, em ordem.</p>
+      <p class="supporting">
+        Registre o que precisa ser feito, acompanhe o que está pendente e marque o que já foi concluído.
+      </p>
+    </div>
+  </aside>
+
+  <main class="panel">
+    <div class="form-area">
+      <h1 class="display title">{{ heading }}</h1>
+      <p class="subtitle">{{ subtitle }}</p>
+      <ng-content />
+    </div>
+  </main>
+</div>

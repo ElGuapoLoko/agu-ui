@@ -1,0 +1,81 @@
+<app-auth-card heading="Criar conta" subtitle="Escolha um nome de usuário e uma senha para começar.">
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    @if (formError(); as message) {
+      <p class="form-error" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <span>{{ message }}</span>
+      </p>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Usuário</mat-label>
+      <input
+        matInput
+        formControlName="username"
+        autocomplete="username"
+        autocapitalize="none"
+        spellcheck="false"
+        [maxlength]="limits.usernameMax"
+        (blur)="normalizeUsernameField()"
+      />
+      <mat-icon matPrefix aria-hidden="true">person</mat-icon>
+      <mat-hint>Letras, números, ponto, hífen ou sublinhado.</mat-hint>
+      <mat-error>{{
+        errorMessage(form.controls.username, {
+          required: 'Informe o nome de usuário.',
+          notBlank: 'Informe o nome de usuário.',
+        })
+      }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Senha</mat-label>
+      <input
+        matInput
+        formControlName="password"
+        [type]="showPassword() ? 'text' : 'password'"
+        autocomplete="new-password"
+        [maxlength]="limits.passwordMax"
+      />
+      <mat-icon matPrefix aria-hidden="true">lock</mat-icon>
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="showPassword.set(!showPassword())"
+        [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+        [attr.aria-pressed]="showPassword()"
+      >
+        <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-hint>Mínimo de {{ limits.passwordMin }} caracteres, com letras e números.</mat-hint>
+      <mat-error>{{ errorMessage(form.controls.password, { required: 'Informe a senha.' }) }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Confirmar senha</mat-label>
+      <input
+        matInput
+        formControlName="confirmPassword"
+        [type]="showPassword() ? 'text' : 'password'"
+        autocomplete="new-password"
+        [maxlength]="limits.passwordMax"
+      />
+      <mat-icon matPrefix aria-hidden="true">lock_reset</mat-icon>
+      <mat-error>{{ errorMessage(form.controls.confirmPassword, { required: 'Repita a senha.' }) }}</mat-error>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" class="submit" type="submit" [disabled]="pending()">
+      <span class="submit-content">
+        @if (pending()) {
+          <mat-spinner diameter="20" aria-hidden="true" />
+          Criando conta…
+        } @else {
+          Criar conta
+        }
+      </span>
+    </button>
+  </form>
+
+  <p class="switch">Já tem conta? <a routerLink="/login">Entrar</a></p>
+</app-auth-card>

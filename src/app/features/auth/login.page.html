@@ -1,0 +1,70 @@
+<app-auth-card heading="Entrar" subtitle="Use seu usuário e senha para ver suas tarefas.">
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    @if (error(); as error) {
+      <p class="form-error" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <span>{{ error.message }}</span>
+      </p>
+    } @else if (expired) {
+      <p class="form-info" role="status">
+        <mat-icon aria-hidden="true">schedule</mat-icon>
+        <span>Sua sessão expirou. Entre novamente para continuar.</span>
+      </p>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Usuário</mat-label>
+      <input
+        matInput
+        formControlName="username"
+        autocomplete="username"
+        autocapitalize="none"
+        spellcheck="false"
+        maxlength="50"
+      />
+      <mat-icon matPrefix aria-hidden="true">person</mat-icon>
+      <mat-error>{{
+        errorMessage(form.controls.username, {
+          required: 'Informe o nome de usuário.',
+          notBlank: 'Informe o nome de usuário.',
+        })
+      }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Senha</mat-label>
+      <input
+        matInput
+        formControlName="password"
+        [type]="showPassword() ? 'text' : 'password'"
+        autocomplete="current-password"
+        maxlength="128"
+      />
+      <mat-icon matPrefix aria-hidden="true">lock</mat-icon>
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="showPassword.set(!showPassword())"
+        [attr.aria-label]="showPassword() ? 'Ocultar senha' : 'Mostrar senha'"
+        [attr.aria-pressed]="showPassword()"
+      >
+        <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error>{{ errorMessage(form.controls.password, { required: 'Informe a senha.' }) }}</mat-error>
+    </mat-form-field>
+
+    <button mat-flat-button color="primary" class="submit" type="submit" [disabled]="pending()">
+      <span class="submit-content">
+        @if (pending()) {
+          <mat-spinner diameter="20" aria-hidden="true" />
+          Entrando…
+        } @else {
+          Entrar
+        }
+      </span>
+    </button>
+  </form>
+
+  <p class="switch">Ainda não tem conta? <a routerLink="/register">Criar conta</a></p>
+</app-auth-card>

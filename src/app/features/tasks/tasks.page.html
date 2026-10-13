@@ -1,0 +1,86 @@
+<header class="header">
+  <div>
+    <h1 class="display heading">Minhas tarefas</h1>
+    <p class="today">{{ today | date: 'fullDate' }}</p>
+  </div>
+  <button mat-flat-button color="primary" class="new-desktop" (click)="create()">
+    <mat-icon>add</mat-icon>
+    Nova tarefa
+  </button>
+</header>
+
+@if (loading()) {
+  <mat-progress-bar class="loading" mode="indeterminate" aria-label="Carregando tarefas" />
+}
+
+@if (loadStatus() === 'error') {
+  <section class="state" role="alert">
+    <mat-icon class="state-icon" aria-hidden="true">cloud_off</mat-icon>
+    <p class="state-text">{{ loadError() }}</p>
+    <button mat-stroked-button color="primary" (click)="retry()">Tentar novamente</button>
+  </section>
+} @else if (loadStatus() === 'loaded') {
+  @if (counts().total > 0) {
+    <section class="progress" aria-label="Progresso">
+      <p class="summary" aria-live="polite">
+        <strong>{{ counts().done }} de {{ counts().total }}</strong>
+        {{ counts().total === 1 ? 'concluída' : 'concluídas' }}
+        @if (counts().open > 0) {
+          <span class="open">({{ counts().open }} {{ counts().open === 1 ? 'pendente' : 'pendentes' }})</span>
+        }
+      </p>
+      <mat-progress-bar
+        class="progress-bar"
+        mode="determinate"
+        [value]="progress()"
+        [attr.aria-label]="counts().done + ' de ' + counts().total + ' tarefas concluídas'"
+      />
+    </section>
+
+    <mat-button-toggle-group
+      class="filters"
+      hideSingleSelectionIndicator
+      [value]="activeFilter()"
+      (change)="changeFilter($event.value)"
+      aria-label="Filtrar tarefas"
+    >
+      <mat-button-toggle value="all"
+        >Todas<span class="count"> ({{ counts().total }})</span></mat-button-toggle
+      >
+      <mat-button-toggle value="open"
+        >Pendentes<span class="count"> ({{ counts().open }})</span></mat-button-toggle
+      >
+      <mat-button-toggle value="done"
+        >Concluídas<span class="count"> ({{ counts().done }})</span></mat-button-toggle
+      >
+    </mat-button-toggle-group>
+  }
+
+  <ul class="sheet" aria-label="Lista de tarefas">
+    @for (task of tasks(); track task.id) {
+      <li class="row">
+        <app-task-item
+          [task]="task"
+          [busy]="busy().has(task.id)"
+          (toggle)="toggle(task, $event)"
+          (edit)="edit(task)"
+          (remove)="remove(task)"
+        />
+      </li>
+    } @empty {
+      <li class="state">
+        <mat-icon class="state-icon" aria-hidden="true">{{
+          counts().total === 0 ? 'edit_note' : 'filter_list'
+        }}</mat-icon>
+        <p class="state-text">{{ emptyMessage() }}</p>
+        @if (counts().total === 0) {
+          <button mat-flat-button color="primary" (click)="create()">Criar tarefa</button>
+        }
+      </li>
+    }
+  </ul>
+}
+
+<button mat-fab color="primary" class="new-mobile" (click)="create()" aria-label="Nova tarefa">
+  <mat-icon>add</mat-icon>
+</button>

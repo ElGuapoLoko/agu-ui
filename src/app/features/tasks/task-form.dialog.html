@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>{{ task ? 'Editar tarefa' : 'Nova tarefa' }}</h2>
+
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <mat-dialog-content class="content">
+    @if (formError(); as message) {
+      <p class="form-error" role="alert">{{ message }}</p>
+    }
+
+    <mat-form-field appearance="outline">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title" [maxlength]="limits.taskTitleMax" autocomplete="off" cdkFocusInitial />
+      @if (form.controls.title.value.length >= limits.taskTitleMax) {
+        <mat-hint>Limite de {{ limits.taskTitleMax }} caracteres atingido.</mat-hint>
+      }
+      <mat-hint align="end">{{ form.controls.title.value.length }}/{{ limits.taskTitleMax }}</mat-hint>
+      <mat-error>{{
+        errorMessage(form.controls.title, { required: 'O título é obrigatório.', notBlank: 'O título é obrigatório.' })
+      }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição (opcional)</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        autocomplete="off"
+        [maxlength]="limits.taskDescriptionMax"
+        cdkTextareaAutosize
+        cdkAutosizeMinRows="3"
+        cdkAutosizeMaxRows="10"
+      ></textarea>
+      <mat-hint align="end">{{ form.controls.description.value.length }}/{{ limits.taskDescriptionMax }}</mat-hint>
+      <mat-error>{{ errorMessage(form.controls.description) }}</mat-error>
+    </mat-form-field>
+
+    @if (task) {
+      <mat-checkbox formControlName="done">Concluída</mat-checkbox>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()" [disabled]="saving()">Cancelar</button>
+    <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
+      <span class="submit-content">
+        @if (saving()) {
+          <mat-spinner diameter="18" aria-hidden="true" />
+          Salvando…
+        } @else {
+          {{ task ? 'Salvar' : 'Criar' }}
+        }
+      </span>
+    </button>
+  </mat-dialog-actions>
+</form>

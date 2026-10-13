@@ -1,0 +1,22 @@
+.content {
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: min(480px, 80vw);
+  padding-top: 8px;
+}
+
+.form-error {
+  margin: 0 0 8px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(211, 47, 47, 0.1);
+  color: #c62828;
+}
+
+.submit-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}

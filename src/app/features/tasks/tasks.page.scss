@@ -1,0 +1,124 @@
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.15;
+}
+
+.today {
+  margin: 6px 0 0;
+  color: var(--app-muted);
+}
+
+.today::first-letter {
+  text-transform: uppercase;
+}
+
+.loading {
+  margin-bottom: 16px;
+}
+
+.progress {
+  margin-bottom: 20px;
+}
+
+.summary {
+  margin: 0 0 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary strong {
+  font-weight: 600;
+}
+
+.open {
+  color: var(--app-muted);
+}
+
+.progress-bar {
+  --mdc-linear-progress-active-indicator-color: var(--app-stamp);
+  --mdc-linear-progress-track-color: var(--app-rule);
+  --mdc-linear-progress-track-height: 6px;
+  --mdc-linear-progress-active-indicator-height: 6px;
+  border-radius: 3px;
+}
+
+.filters {
+  margin-bottom: 16px;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+// One sheet of paper for the whole docket, not a pile of cards.
+.sheet {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--app-rule);
+  border-radius: 12px;
+  background: var(--app-sheet);
+  overflow: hidden;
+}
+
+.row + .row {
+  border-top: 1px solid var(--app-rule);
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.state-icon {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+  color: var(--app-muted);
+}
+
+.state-text {
+  margin: 0;
+  max-width: 36ch;
+  color: var(--app-muted);
+}
+
+.new-mobile {
+  position: fixed;
+  right: 20px;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  display: none;
+}
+
+@media (max-width: 600px) {
+  .new-desktop {
+    display: none;
+  }
+
+  .new-mobile {
+    display: inline-flex;
+  }
+
+  .filters {
+    display: flex;
+    width: 100%;
+  }
+
+  .filters mat-button-toggle {
+    flex: 1;
+  }
+
+  .count {
+    display: none;
+  }
+}

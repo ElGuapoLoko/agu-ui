@@ -1,0 +1,57 @@
+// Shared by the login and registration pages.
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.form-error,
+.form-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border-left: 3px solid var(--app-danger);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--app-danger) 9%, transparent);
+  color: var(--app-text);
+  font-size: 0.9375rem;
+}
+
+.form-error mat-icon {
+  color: var(--app-danger);
+}
+
+.form-info {
+  border-left-color: var(--app-primary);
+  background: color-mix(in srgb, var(--app-primary) 9%, transparent);
+}
+
+.form-info mat-icon {
+  color: var(--app-primary);
+}
+
+.submit {
+  height: 48px;
+  margin-top: 12px;
+}
+
+.submit-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.switch {
+  margin: 28px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--app-rule);
+  color: var(--app-muted);
+}
+
+.switch a {
+  color: var(--app-primary);
+  font-weight: 600;
+  text-underline-offset: 3px;
+}
